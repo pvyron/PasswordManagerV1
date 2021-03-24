@@ -65,4 +65,9 @@
   <ItemGroup>
     <None Include="PublishLocations\PMDatabase.publish.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <Build Include="dbo\Tables\Users.sql" />
+    <Build Include="dbo\Tables\Applications.sql" />
+    <Build Include="dbo\Tables\Passwords.sql" />
+  </ItemGroup>
 </Project>
