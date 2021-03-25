@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Net.Http.Headers;
 using System.Configuration;
 using PMDesktopUI.Library.Models;
+using PMDesktopUI.Library.Helpers;
 
 namespace PMDesktopUI.Library.API
 {
@@ -14,9 +15,12 @@ namespace PMDesktopUI.Library.API
     {
         private HttpClient _apiClient { get; set; }
         private ILoggedInUserModel _loggedInUser;
+        private IConfigHelper _configHelper;
 
-        public APIHelper(ILoggedInUserModel loggedInUserModel)
+        public APIHelper(ILoggedInUserModel loggedInUserModel, IConfigHelper configHelper)
         {
+            _configHelper = configHelper;
+            
             InitializeClient();
 
             _loggedInUser = loggedInUserModel;
@@ -32,7 +36,7 @@ namespace PMDesktopUI.Library.API
 
         private void InitializeClient()
         {
-            string api = ConfigurationManager.AppSettings.Get("api");
+            string api = _configHelper.GetAPI();
 
             _apiClient = new HttpClient();
             _apiClient.BaseAddress = new Uri(api);

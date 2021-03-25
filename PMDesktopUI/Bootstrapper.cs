@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using PMDesktopUI.Helpers;
 using PMDesktopUI.Library.API;
+using PMDesktopUI.Library.Helpers;
 using PMDesktopUI.Library.Models;
 using PMDesktopUI.ViewModels;
 using System;
@@ -37,6 +38,7 @@ namespace PMDesktopUI
                 .Singleton<IAPIHelper, APIHelper>()
                 .Singleton<IWindowManager, WindowManager>()
                 .Singleton<IEventAggregator, EventAggregator>()
+                .Singleton<IConfigHelper, ConfigHelper>()
                 .Singleton<ILoggedInUserModel, LoggedInUserModel>();
 
             GetType().Assembly.GetTypes()

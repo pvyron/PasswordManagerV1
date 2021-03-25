@@ -3,24 +3,27 @@ using System.Threading.Tasks;
 using Caliburn.Micro;
 using PMDesktopUI.EventModels;
 using PMDesktopUI.Library.API;
+using PMDesktopUI.Library.Helpers;
 
 namespace PMDesktopUI.ViewModels
 {
     public class LoginViewModel : Screen
     {
-        private string _userName = "pvyron@gmail.com";
-        private string _password = "85208520";
+        private string _userName;
+        private string _password;
         private string _errorMessage;
         private bool _activeControls;
 
         private IAPIHelper apiHelper;
         private IEventAggregator events;
 
-        public LoginViewModel(IAPIHelper apiHelper, IEventAggregator events)
+        public LoginViewModel(IAPIHelper apiHelper, IEventAggregator events, IConfigHelper configHelper)
         {
             this.apiHelper = apiHelper;
             this.events = events;
             _activeControls = true;
+            UserName = configHelper.GetDefaultUsername();
+            Password = configHelper.GetDefaultPassword();
         }
 
         public string UserName
