@@ -75,6 +75,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="EventModels\LogOnEventModel.cs" />
+    <Compile Include="Helpers\BindingListEx.cs" />
     <Compile Include="Helpers\PasswordBoxHelper.cs" />
     <Compile Include="ViewModels\IndexViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
@@ -146,6 +148,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Views\clipboard.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Views\add.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

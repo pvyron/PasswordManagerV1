@@ -12,7 +12,7 @@
                 
             </MenuItem>
             <MenuItem Header="_Account" >
-                <MenuItem x:Name="LoginScreen" Header="_Login"/>
+                <MenuItem x:Name="LoginScreen" Header="Change _User"/>
             </MenuItem>
         </Menu>
         <Grid>

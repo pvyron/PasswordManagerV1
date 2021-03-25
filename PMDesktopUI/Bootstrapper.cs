@@ -29,7 +29,9 @@ namespace PMDesktopUI
 
         protected override void Configure()
         {
-            _container.Instance(_container);
+            _container.Instance(_container)
+                .PerRequest<IApplicationsEndPoint, ApplicationsEndPoint>()
+                .PerRequest<IPasswordsEndPoint, PasswordsEndPoint>();
 
             _container
                 .Singleton<IAPIHelper, APIHelper>()

@@ -3,20 +3,22 @@ using PMDataManager.Library.DataAccess;
 using PMDataManager.Library.Models;
 using System;
 using System.Collections.Generic;
-using System.Web;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Web.Http;
 
 namespace PMDataManager.Controllers
 {
     [Authorize]
-    public class UsersController : ApiController
+    public class PasswordsController : ApiController
     {
-        public UserModel Get()
+        public List<PasswordModel> Get()
         {
             string userId = RequestContext.Principal.Identity.GetUserId();
-            UserData data = new UserData();
+            PasswordData data = new PasswordData();
 
-            return data.GetUserById(userId);
+            return data.GetPasswordsByUserId(userId);
         }
     }
 }
