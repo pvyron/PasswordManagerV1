@@ -1,5 +1,7 @@
 ﻿using Caliburn.Micro;
 using PMDesktopUI.Helpers;
+using PMDesktopUI.Library.API;
+using PMDesktopUI.Library.Models;
 using PMDesktopUI.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -30,9 +32,10 @@ namespace PMDesktopUI
             _container.Instance(_container);
 
             _container
+                .Singleton<IAPIHelper, APIHelper>()
                 .Singleton<IWindowManager, WindowManager>()
                 .Singleton<IEventAggregator, EventAggregator>()
-                .Singleton<IAPIHelper, APIHelper>();
+                .Singleton<ILoggedInUserModel, LoggedInUserModel>();
 
             GetType().Assembly.GetTypes()
                 .Where(type => type.IsClass)
