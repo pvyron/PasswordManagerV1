@@ -72,5 +72,9 @@
     <Build Include="dbo\Stored Procedures\spUserLookup.sql" />
     <Build Include="dbo\Stored Procedures\spApplicationLookup_ForUser.sql" />
     <Build Include="dbo\Stored Procedures\spPasswordLookup_ForUser.sql" />
+    <Build Include="dbo\Stored Procedures\spPasswordUpdate_ByUserById.sql" />
+    <Build Include="dbo\Stored Procedures\spPasswordOwnerLookup_ById.sql" />
+    <Build Include="dbo\Stored Procedures\spPasswordAdd.sql" />
+    <Build Include="dbo\Stored Procedures\spApplicationOwnerLookup_ById.sql" />
   </ItemGroup>
 </Project>

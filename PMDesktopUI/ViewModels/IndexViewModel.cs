@@ -24,6 +24,7 @@ namespace PMDesktopUI.ViewModels
         private string _username;
         private string _password;
         private bool _isEditing;
+        private bool _isAdding;
 
         private IApplicationsEndPoint _applicationsEndPoint;
         private IPasswordsEndPoint _passwordsEndPoint;
@@ -39,21 +40,29 @@ namespace PMDesktopUI.ViewModels
             base.OnViewLoaded(view);
 
             await LoadApplications();
+            await LoadPasswords();
         }
 
         private async Task LoadApplications()
         {
             var applicationModels = await _applicationsEndPoint.GetAll();
-            var passwordModels = await _passwordsEndPoint.GetAll();
 
             Applications = new BindingList<ApplicationModel>(applicationModels);
             ApplicationsAlias = Applications;
+        }
+
+        private async Task LoadPasswords()
+        {
+            var passwordModels = await _passwordsEndPoint.GetAll();
             Passwords = new BindingList<PasswordModel>(passwordModels);
         }
 
         public BindingList<ApplicationModel> Applications
         {
-            get { return _applications; }
+            get 
+            { 
+                return _applications?.OrderBy(a => a?.ApplicationAlias).ToList().ToBindingList(); 
+            }
             set 
             { 
                 _applications = value;
@@ -82,7 +91,7 @@ namespace PMDesktopUI.ViewModels
             {
                 try
                 {
-                    return _passwords.Where(p => p.ApplicationId == SelectedApplication?.Id).ToList().ToBindingList();
+                    return _passwords.Where(p => p.ApplicationId == SelectedApplication?.Id).OrderBy(p => p.PasswordAlias).ToList().ToBindingList();
                 }
                 catch (ArgumentNullException ex) 
                 {
@@ -110,6 +119,7 @@ namespace PMDesktopUI.ViewModels
                 Password = _selectedPassword?.Password;
                 PasswordAlias = _selectedPassword?.PasswordAlias;
                 NotifyOfPropertyChange(() => SelectedPassword);
+                NotifyOfPropertyChange(() => CanEditPassword);
             } 
         }
 
@@ -130,6 +140,7 @@ namespace PMDesktopUI.ViewModels
             { 
                 _selectedApplicationsAlias = value;
                 NotifyOfPropertyChange(() => SelectedApplicationAlias);
+                NotifyOfPropertyChange(() => CanAddNewPassword);
             }
         }
 
@@ -177,6 +188,47 @@ namespace PMDesktopUI.ViewModels
                 NotifyOfPropertyChange(() => CanSaveChanges);
                 NotifyOfPropertyChange(() => CanAddNewPassword);
                 NotifyOfPropertyChange(() => CanDeletePassword);
+                NotifyOfPropertyChange(() => CanCancelChanges);
+
+                NotifyOfPropertyChange(() => AreListsEnabled);
+                NotifyOfPropertyChange(() => AreFieldsActive);
+            }
+        }
+
+        public bool IsAdding
+        {
+            get { return _isAdding; }
+            set 
+            {
+                _isAdding = value;
+                NotifyOfPropertyChange(() => IsAdding);
+                NotifyOfPropertyChange(() => CanAddNewApplication);
+                NotifyOfPropertyChange(() => CanCopyUsername);
+                NotifyOfPropertyChange(() => CanCopyPassword);
+                NotifyOfPropertyChange(() => CanEditPassword);
+                NotifyOfPropertyChange(() => CanSaveChanges);
+                NotifyOfPropertyChange(() => CanAddNewPassword);
+                NotifyOfPropertyChange(() => CanDeletePassword);
+                NotifyOfPropertyChange(() => CanCancelChanges);
+
+                NotifyOfPropertyChange(() => AreListsEnabled);
+                NotifyOfPropertyChange(() => AreFieldsActive);
+            }
+        }
+
+        public bool AreListsEnabled
+        {
+            get
+            {
+                return !IsEditing && !IsAdding;
+            }
+        }
+
+        public bool AreFieldsActive
+        {
+            get
+            {
+                return IsEditing || IsAdding;
             }
         }
 
@@ -184,7 +236,7 @@ namespace PMDesktopUI.ViewModels
         {
             get
             {
-                return IsEditing;
+                return IsEditing || IsAdding;
             }
         }
 
@@ -192,7 +244,7 @@ namespace PMDesktopUI.ViewModels
         {
             get
             {
-                return !IsEditing;
+                return !IsEditing && !IsAdding;
             }
         }
 
@@ -200,7 +252,7 @@ namespace PMDesktopUI.ViewModels
         {
             get
             {
-                return !IsEditing;
+                return !IsEditing && !IsAdding;
             }
         }
 
@@ -208,7 +260,10 @@ namespace PMDesktopUI.ViewModels
         {
             get
             {
-                return !IsEditing;
+                if (SelectedPassword is null)
+                    return false;
+
+                return !IsEditing && !IsAdding;
             }
         }
 
@@ -216,7 +271,7 @@ namespace PMDesktopUI.ViewModels
         {
             get
             {
-                return IsEditing;
+                return IsEditing || IsAdding;
             }
         }
 
@@ -224,7 +279,7 @@ namespace PMDesktopUI.ViewModels
         {
             get
             {
-                return !IsEditing;
+                return !IsEditing && !IsAdding && SelectedApplication is object;
             }
         }
 
@@ -232,7 +287,15 @@ namespace PMDesktopUI.ViewModels
         {
             get
             {
-                return IsEditing;
+                return IsEditing && !IsAdding;
+            }
+        }
+
+        public bool CanCancelChanges
+        {
+            get
+            {
+                return IsEditing || IsAdding;
             }
         }
 
@@ -260,17 +323,138 @@ namespace PMDesktopUI.ViewModels
 
         public async Task SaveChanges()
         {
-            IsEditing = false;
+            if (IsEditing)
+                await SaveChangesEdit();
+
+            if (IsAdding)
+                await SaveChangesAdd();
         }
 
         public async Task AddNewPassword()
         {
+            PasswordModel passwordModel = new PasswordModel()
+            {
+                Id = -1,
+                ApplicationId = SelectedApplication.Id,
+                Encrypted = false,
+                PasswordAlias = "Default"
+            };
 
+            _passwords.Add(passwordModel);
+            NotifyOfPropertyChange(() => Passwords);
+
+            SelectedPassword = passwordModel;
+
+            IsAdding = true;
         }
 
         public async Task DeletePassword()
         {
 
+        }
+
+        public async Task CancelChanges()
+        {
+            if (IsEditing)
+                await CancelChangesEdit();
+
+            if (IsAdding)
+                await CancelChangesAdd();
+        }
+
+        async Task SaveChangesAdd()
+        {
+            if (string.IsNullOrEmpty(PasswordAlias))
+            {
+                return;
+            }
+
+            if (string.IsNullOrEmpty(Username))
+            {
+                return;
+            }
+
+            if (string.IsNullOrEmpty(Password))
+            {
+                return;
+            }
+
+            PasswordCreateModel passwordCreateModel = new PasswordCreateModel()
+            {
+                ApplicationId = SelectedApplicationAlias.Id,
+                Encrypted = false,
+                Password = Password,
+                PasswordAlias = PasswordAlias,
+                Username = Username
+            };
+
+            int applicationId = passwordCreateModel.ApplicationId;
+            int newPasswordId = await _passwordsEndPoint.CreateNewPassword(passwordCreateModel);
+
+            await LoadPasswords();
+
+            SelectedApplication = Applications.First(a => a.Id == applicationId);
+            SelectedPassword = Passwords.First(p => p.Id == newPasswordId);
+
+            IsAdding = false;
+        }
+
+        async Task SaveChangesEdit()
+        {
+            if (SelectedPassword.ApplicationId == SelectedApplicationAlias.Id &&
+                SelectedPassword.PasswordAlias == PasswordAlias.Trim() &&
+                SelectedPassword.Username == Username.Trim() &&
+                SelectedPassword.Password == Password.Trim())
+            {
+                IsEditing = false;
+                return;
+            }
+
+            int applicationId = SelectedApplicationAlias.Id;
+            int passwordId = SelectedPassword.Id;
+
+            PasswordUpdateModel passwordUpdateModel = new PasswordUpdateModel()
+            {
+                ApplicationId = SelectedApplicationAlias.Id,
+                PasswordAlias = PasswordAlias.Trim(),
+                Username = Username.Trim(),
+                Password = Password.Trim(),
+                Encrypted = false
+            };
+
+            await _passwordsEndPoint.UpdatePassword(passwordId, passwordUpdateModel);
+
+            await LoadPasswords();
+
+            SelectedApplication = Applications.FirstOrDefault(a => a.Id == applicationId);
+            SelectedPassword = Passwords.FirstOrDefault(p => p.Id == passwordId);
+
+            IsEditing = false;
+        }
+
+        async Task CancelChangesAdd()
+        {
+            _passwords.Remove(_passwords.First(p => p.Id == -1));
+
+            SelectedApplicationAlias = SelectedApplication;
+            SelectedPassword = Passwords?.FirstOrDefault();
+            Username = SelectedPassword?.Username;
+            Password = SelectedPassword?.Password;
+            PasswordAlias = SelectedPassword?.PasswordAlias;
+
+            NotifyOfPropertyChange(() => Passwords);
+
+            IsAdding = false;
+        }
+
+        async Task CancelChangesEdit()
+        {
+            SelectedApplicationAlias = SelectedApplication;
+            Username = SelectedPassword?.Username;
+            Password = SelectedPassword?.Password;
+            PasswordAlias = SelectedPassword?.PasswordAlias;
+
+            IsEditing = false;
         }
     }
 }

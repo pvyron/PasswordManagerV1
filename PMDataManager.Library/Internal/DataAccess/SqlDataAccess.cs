@@ -29,13 +29,23 @@ namespace PMDataManager.Library.Internal.DataAccess
             }
         }
 
-        public void SaveData<T>(string storedProcedure, T parameters, string connectionStringName)
+        public void UpdateData<T>(string storedProcedure, T parameters, string connectionStringName)
         {
             string connectionString = GetConnectionString(connectionStringName);
 
             using (IDbConnection conn = new SqlConnection(connectionString))
             {
                 conn.Execute(storedProcedure, parameters, commandType: CommandType.StoredProcedure);
+            }
+        }
+
+        public T SaveData<T, U>(string storedProcedure, U parameters, string connectionStringName)
+        {
+            string connectionString = GetConnectionString(connectionStringName);
+
+            using (IDbConnection conn = new SqlConnection(connectionString))
+            {
+                return conn.ExecuteScalar<T>(storedProcedure, parameters, commandType: CommandType.StoredProcedure);
             }
         }
     }

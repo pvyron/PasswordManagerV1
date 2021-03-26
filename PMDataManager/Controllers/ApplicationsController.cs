@@ -20,5 +20,23 @@ namespace PMDataManager.Controllers
 
             return data.GetApplicationsByUserId(userId);
         }
+
+        public ApplicationModel Get(int id)
+        {
+            string userId = RequestContext.Principal.Identity.GetUserId();
+            ApplicationData data = new ApplicationData();
+
+            return data.GetApplicationsByUserId(userId).Find(a => a.Id == id);
+        }
+
+        public void Post([FromBody] ApplicationModel passwordModel)
+        {
+
+        }
+
+        public void Put(int id, [FromBody] ApplicationModel passwordModel)
+        {
+
+        }
     }
 }

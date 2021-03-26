@@ -49,7 +49,9 @@
     <Compile Include="DataAccess\PasswordData.cs" />
     <Compile Include="DataAccess\UserData.cs" />
     <Compile Include="Models\ApplicationModel.cs" />
+    <Compile Include="Models\PasswordCreateModel.cs" />
     <Compile Include="Models\PasswordModel.cs" />
+    <Compile Include="Models\PasswordUpdateModel.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Internal\DataAccess\SqlDataAccess.cs" />

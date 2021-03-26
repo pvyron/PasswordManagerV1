@@ -31,5 +31,31 @@ namespace PMDesktopUI.Library.API
                 return result;
             }
         }
+
+        public async Task UpdatePassword(int id, PasswordUpdateModel passwordUpdateModel)
+        {
+            using (HttpResponseMessage response = await _apiHelper.ApiClient.PutAsJsonAsync($"/api/Passwords/{id}", passwordUpdateModel))
+            {
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new Exception(response.ReasonPhrase);
+                }
+            }
+        }
+
+        public async Task<int> CreateNewPassword(PasswordCreateModel passwordModel)
+        {
+            using (HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync($"/api/Passwords", passwordModel))
+            {
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new Exception(response.ReasonPhrase);
+                }
+
+                var result = await response.Content.ReadAsAsync<int>();
+
+                return result;
+            }
+        }
     }
 }

@@ -20,5 +20,16 @@ namespace PMDataManager.Library.DataAccess
 
             return output;
         }
+
+        public string GetApplicationOwner(int id)
+        {
+            SqlDataAccess sql = new SqlDataAccess();
+
+            var p = new { Id = id };
+
+            var output = sql.LoadData<string, dynamic>("dbo.spApplicationOwnerLookup_ById", p, "PMDatabase").FirstOrDefault();
+
+            return output;
+        }
     }
 }
