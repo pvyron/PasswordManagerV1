@@ -5,5 +5,6 @@
 	[ApplicationAlias] NVARCHAR(256) NOT NULL,
 	[CreateDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
 	[UpdateDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
-	[DefaultEncryption] BIT NOT NULL DEFAULT 0
+	[DefaultEncryption] BIT NOT NULL DEFAULT 0, 
+    CONSTRAINT [FK_Applications_ToUsers] FOREIGN KEY ([UserId]) REFERENCES [Users]([Id])
 )
