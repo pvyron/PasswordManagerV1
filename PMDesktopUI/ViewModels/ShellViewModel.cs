@@ -11,28 +11,26 @@ namespace PMDesktopUI.ViewModels
     public class ShellViewModel : Conductor<object>, IHandle<LogOnEventModel>
     {
         private IndexViewModel _indexViewModel;
-        private SimpleContainer _container;
         private IEventAggregator _events;
 
-        public ShellViewModel(IEventAggregator events, IndexViewModel indexViewModel, SimpleContainer container)
+        public ShellViewModel(IEventAggregator events, IndexViewModel indexViewModel)
         {
             _events = events;
             _indexViewModel = indexViewModel;
-            _container = container;
 
             _events.Subscribe(this);
-            ActivateItem(_container.GetInstance<LoginViewModel>());
+            ActivateItem(IoC.Get<LoginViewModel>());
         }
 
         public void Handle(LogOnEventModel message)
         {
-            _indexViewModel = _container.GetInstance<IndexViewModel>();
+            _indexViewModel = IoC.Get<IndexViewModel>();
             ActivateItem(_indexViewModel);
         }
         
         public async Task LoginScreen()
         {
-            ActivateItem(_container.GetInstance<LoginViewModel>());
+            ActivateItem(IoC.Get<LoginViewModel>());
         }
     }
 }
