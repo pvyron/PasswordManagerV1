@@ -21,7 +21,7 @@ namespace PMDataManager.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+            : base("EFDatabase", throwIfV1Schema: false)
         {
         }
         
