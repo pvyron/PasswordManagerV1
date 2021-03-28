@@ -1,21 +1,24 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using PMDataManager.Library.DataAccess;
 using PMDataManager.Library.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace PMDataManager.Controllers
 {
-    [Authorize(Roles = "Verified")]
-    public class ApplicationsController : ApiController
+    [Authorize]
+    [ApiController]
+    [Route("api/[controller]")]
+    public class ApplicationsController : ControllerBase
     {
         public List<ApplicationModel> Get()
         {
-            string userId = RequestContext.Principal.Identity.GetUserId();
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             ApplicationData data = new ApplicationData();
 
             return data.GetApplicationsByUserId(userId);
@@ -23,7 +26,7 @@ namespace PMDataManager.Controllers
 
         public ApplicationModel Get(int id)
         {
-            string userId = RequestContext.Principal.Identity.GetUserId();
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             ApplicationData data = new ApplicationData();
 
             return data.GetApplicationsByUserId(userId).Find(a => a.Id == id);
@@ -41,7 +44,7 @@ namespace PMDataManager.Controllers
 
         public void Delete(int id)
         {
-            
+
         }
     }
 }

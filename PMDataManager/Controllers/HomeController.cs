@@ -1,18 +1,67 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using PMDataManager.Models;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using System.Threading.Tasks;
 
 namespace PMDataManager.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index()
+        private readonly ILogger<HomeController> _logger;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<IdentityUser> _userManager;
+
+        public HomeController(ILogger<HomeController> logger, RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager)
         {
-            ViewBag.Title = "Home Page";
+            _logger = logger;
+            _roleManager = roleManager;
+            _userManager = userManager;
+        }
+
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> Privacy()
+        {
+            //string[] roles = new string[]
+            //{
+            //    "Administrator",
+            //    "Premium",
+            //    "Verified",
+            //    "Unverified"
+            //};
+
+            //foreach (var role in roles)
+            //{
+            //    var roleExist = await _roleManager.RoleExistsAsync(role);
+
+            //    if (!roleExist)
+            //        await _roleManager.CreateAsync(new IdentityRole(role));
+            //}
+
+            //var user = await _userManager.FindByEmailAsync("pvyron@gmail.com");
+
+            //if (user != null)
+            //{
+            //    await _userManager.AddToRoleAsync(user, "Administrator");
+            //    await _userManager.AddToRoleAsync(user, "Premium");
+            //    await _userManager.AddToRoleAsync(user, "Verified");
+            //}
 
             return View();
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

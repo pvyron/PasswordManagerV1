@@ -1,23 +1,38 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
+using PMDataManager.Data;
 using PMDataManager.Library.DataAccess;
 using PMDataManager.Library.Models;
 using PMDataManager.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Http;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace PMDataManager.Controllers
 {
     [Authorize]
-    public class UsersController : ApiController
+    [ApiController]
+    [Route("api/[controller]")]
+    public class UsersController : ControllerBase
     {
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
+
+        public UsersController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        {
+            _context = context;
+            _userManager = userManager;
+        }
+
         [HttpGet]
         public UserModel GetById()
         {
-            string userId = RequestContext.Principal.Identity.GetUserId();
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             UserData data = new UserData();
 
             return data.GetUserById(userId);
@@ -30,29 +45,25 @@ namespace PMDataManager.Controllers
         {
             List<ApplicationUserModel> applicationUserModels = new List<ApplicationUserModel>();
 
-            using (var context = new ApplicationDbContext())
+            var users = _context.Users.ToList();
+
+            var userRoles = from ur in _context.UserRoles
+                            join r in _context.Roles on ur.RoleId equals r.Id
+                            select new { ur.UserId, ur.RoleId, r.Name };
+
+            foreach (var user in users)
             {
-                var userStore = new UserStore<ApplicationUser>(context);
-                var userManager = new UserManager<ApplicationUser>(userStore);
-
-                var users = userManager.Users.ToList();
-                var roles = context.Roles.ToList();
-
-                foreach (var user in users)
+                ApplicationUserModel applicationUserModel = new ApplicationUserModel()
                 {
-                    ApplicationUserModel applicationUserModel = new ApplicationUserModel()
-                    {
-                        Id = user.Id,
-                        Email = user.Email
-                    };
+                    Id = user.Id,
+                    Email = user.Email
+                };
 
-                    foreach (var userRole in user.Roles)
-                    {
-                        applicationUserModel.Roles.Add(userRole.RoleId, roles.Where(r => r.Id == userRole.RoleId).First().Name);
-                    }
+                applicationUserModel.Roles = userRoles
+                    .Where(ur => ur.UserId == applicationUserModel.Id)
+                    .ToDictionary(ur => ur.RoleId, ur => ur.Name);
 
-                    applicationUserModels.Add(applicationUserModel);
-                }
+                applicationUserModels.Add(applicationUserModel);
             }
 
             return applicationUserModels;
@@ -63,40 +74,29 @@ namespace PMDataManager.Controllers
         [Authorize(Roles = "Administrator")]
         public Dictionary<string, string> GetAllRoles()
         {
-            using (var context = new ApplicationDbContext())
-            {
-                var roles = context.Roles.ToDictionary(r => r.Id, r => r.Name);
+            var roles = _context.Roles.ToDictionary(r => r.Id, r => r.Name);
 
-                return roles;
-            }
+            return roles;
         }
 
         [HttpPost]
         [Route("api/admin/Users/Roles/Add")]
         [Authorize(Roles = "Administrator")]
-        public void AddRole([FromBody]UserRolePairModel pairing)
+        public async Task AddRole([FromBody] UserRolePairModel pairing)
         {
-            using (var context = new ApplicationDbContext())
-            {
-                var userStore = new UserStore<ApplicationUser>(context);
-                var userManager = new UserManager<ApplicationUser>(userStore);
+            var user = await _userManager.FindByIdAsync(pairing.UserId);
 
-                userManager.AddToRole(pairing.UserId, pairing.RoleName);
-            }
+            await _userManager.AddToRoleAsync(user, pairing.RoleName);
         }
 
         [HttpPost]
         [Route("api/admin/Users/Roles/Remove")]
         [Authorize(Roles = "Administrator")]
-        public void RemoveRole([FromBody] UserRolePairModel pairing)
+        public async Task RemoveRole([FromBody] UserRolePairModel pairing)
         {
-            using (var context = new ApplicationDbContext())
-            {
-                var userStore = new UserStore<ApplicationUser>(context);
-                var userManager = new UserManager<ApplicationUser>(userStore);
+            var user = await _userManager.FindByIdAsync(pairing.UserId);
 
-                userManager.RemoveFromRole(pairing.UserId, pairing.RoleName);
-            }
+            await _userManager.RemoveFromRoleAsync(user, pairing.RoleName);
         }
 
         [Authorize(Roles = "Administrator")]
