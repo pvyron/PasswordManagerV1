@@ -10,7 +10,7 @@ using System.Web.Http;
 
 namespace PMDataManager.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Verified")]
     public class ApplicationsController : ApiController
     {
         public List<ApplicationModel> Get()
