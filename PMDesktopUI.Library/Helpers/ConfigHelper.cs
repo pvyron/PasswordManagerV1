@@ -11,7 +11,7 @@ namespace PMDesktopUI.Library.Helpers
     {
         public string GetAPI()
         {
-            string api = ConfigurationManager.AppSettings.Get("api");
+            string api = ConfigurationManager.AppSettings["api"];
 
             return api;
         }
@@ -20,9 +20,9 @@ namespace PMDesktopUI.Library.Helpers
         {
             try
             {
-                string defaultUsername = ConfigurationManager.AppSettings.Get("defaultUsername");
+                string defaultUsername = ConfigurationManager.AppSettings["defaultUsername"];
 
-            return defaultUsername;
+                return defaultUsername;
             }
             catch
             {
@@ -35,7 +35,7 @@ namespace PMDesktopUI.Library.Helpers
         {
             try
             {
-                string defaultPassword = ConfigurationManager.AppSettings.Get("defaultPassword");
+                string defaultPassword = ConfigurationManager.AppSettings["defaultPassword"];
 
                 return defaultPassword;
             }
