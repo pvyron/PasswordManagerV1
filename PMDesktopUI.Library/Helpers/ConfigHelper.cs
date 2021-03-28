@@ -26,6 +26,7 @@ namespace PMDesktopUI.Library.Helpers
             }
             catch
             {
+                // LOG IT
                 return "";
             }
         }
@@ -40,6 +41,7 @@ namespace PMDesktopUI.Library.Helpers
             }
             catch
             {
+                // LOG IT
                 return "";
             }
         }

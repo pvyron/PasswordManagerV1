@@ -74,6 +74,22 @@ namespace PMDataManager.Library.DataAccess
             return output;
         }
 
+        public void DeletePasswordForUser(int id, string userId)
+        {
+            string passwordOwner = GetPasswordOwner(id);
+
+            if (passwordOwner != userId)
+            {
+                throw new Exception("Password was not found or user is unauthorized.");
+            }
+
+            SqlDataAccess sql = new SqlDataAccess();
+
+            var p = new { Id = id };
+
+            sql.UpdateData("dbo.spPasswordDelete_ById", p, "PMDatabase");
+        }
+
         public string GetPasswordOwner(int id)
         {
             SqlDataAccess sql = new SqlDataAccess();

@@ -15,5 +15,16 @@ namespace PMDesktopUI.Library.Models
         public string EmailAddress { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime UpdateDate { get; set; }
+
+        public void LogOffUser()
+        {
+            Token = "";
+            Id = "";
+            FirstName = "";
+            LastName = "";
+            EmailAddress = "";
+            CreateDate = DateTime.MinValue;
+            UpdateDate = DateTime.MinValue;
+        }
     }
 }

@@ -44,5 +44,13 @@ namespace PMDataManager.Controllers
 
             data.UpdatePasswordForUser(id, userId, passwordUpdateModel);
         }
+
+        public void Delete(int id)
+        {
+            string userId = RequestContext.Principal.Identity.GetUserId();
+            PasswordData data = new PasswordData();
+
+            data.DeletePasswordForUser(id, userId);
+        }
     }
 }

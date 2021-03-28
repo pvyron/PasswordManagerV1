@@ -57,5 +57,16 @@ namespace PMDesktopUI.Library.API
                 return result;
             }
         }
+
+        public async Task DeletePassword(int id)
+        {
+            using (HttpResponseMessage response = await _apiHelper.ApiClient.DeleteAsync($"/api/Passwords/{id}"))
+            {
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new Exception(response.ReasonPhrase);
+                }
+            }
+        }
     }
 }

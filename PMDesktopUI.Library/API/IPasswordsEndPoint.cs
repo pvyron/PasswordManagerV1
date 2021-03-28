@@ -11,5 +11,7 @@ namespace PMDesktopUI.Library.API
         Task<int> CreateNewPassword(PasswordCreateModel passwordModel);
 
         Task UpdatePassword(int id, PasswordUpdateModel passwordModel);
+
+        Task DeletePassword(int id);
     }
 }

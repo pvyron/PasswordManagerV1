@@ -76,5 +76,6 @@
     <Build Include="dbo\Stored Procedures\spPasswordOwnerLookup_ById.sql" />
     <Build Include="dbo\Stored Procedures\spPasswordAdd.sql" />
     <Build Include="dbo\Stored Procedures\spApplicationOwnerLookup_ById.sql" />
+    <Build Include="dbo\Stored Procedures\spPasswordDelete_ById.sql" />
   </ItemGroup>
 </Project>

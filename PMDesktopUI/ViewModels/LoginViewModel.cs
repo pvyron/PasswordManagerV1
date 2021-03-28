@@ -100,7 +100,6 @@ namespace PMDesktopUI.ViewModels
             {
                 var result = await apiHelper.Authenticate(UserName, Password);
 
-                // Capture more info for the user
                 await apiHelper.GetLoggedInUserInfo(result.Access_Token);
 
                 events.PublishOnUIThread(new LogOnEventModel());

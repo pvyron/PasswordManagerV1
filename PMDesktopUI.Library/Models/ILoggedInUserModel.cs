@@ -11,5 +11,6 @@ namespace PMDesktopUI.Library.Models
         string LastName { get; set; }
         string Token { get; set; }
         DateTime UpdateDate { get; set; }
+        void LogOffUser();
     }
 }

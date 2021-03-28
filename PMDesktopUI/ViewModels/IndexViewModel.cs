@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -25,6 +26,8 @@ namespace PMDesktopUI.ViewModels
         private string _password;
         private bool _isEditing;
         private bool _isAdding;
+        private bool _isMessageToUserVisible;
+        private string _messageToUser;
 
         private IApplicationsEndPoint _applicationsEndPoint;
         private IPasswordsEndPoint _passwordsEndPoint;
@@ -80,8 +83,14 @@ namespace PMDesktopUI.ViewModels
                 NotifyOfPropertyChange(() => Passwords);
 
                 SelectedApplicationAlias = _selectedApplication;
-                try { SelectedPassword = Passwords?.First(); }
-                catch (Exception ex) { }
+                try 
+                { 
+                    SelectedPassword = Passwords?.First(); 
+                }
+                catch (Exception ex) 
+                { 
+                    // LOG IT
+                }
             }
         }
 
@@ -95,6 +104,7 @@ namespace PMDesktopUI.ViewModels
                 }
                 catch (ArgumentNullException ex) 
                 {
+                    // LOG IT
                     return new BindingList<PasswordModel>();
                 }
             }
@@ -171,6 +181,26 @@ namespace PMDesktopUI.ViewModels
             { 
                 _password = value;
                 NotifyOfPropertyChange(() => Password);
+            }
+        }
+
+        public string MessageToUser
+        {
+            get { return _messageToUser; }
+            set
+            {
+                _messageToUser = value;
+                NotifyOfPropertyChange(() => MessageToUser);
+            }
+        }
+
+        public bool IsMessageToUserVisible
+        {
+            get { return _isMessageToUserVisible; }
+            set
+            {
+                _isMessageToUserVisible = value;
+                NotifyOfPropertyChange(() => IsMessageToUserVisible);
             }
         }
 
@@ -350,7 +380,16 @@ namespace PMDesktopUI.ViewModels
 
         public async Task DeletePassword()
         {
+            int applicationId = SelectedApplicationAlias.Id;
+            int passwordId = SelectedPassword.Id;
 
+            await _passwordsEndPoint.DeletePassword(passwordId);
+
+            await LoadPasswords();
+
+            SelectedApplication = Applications.FirstOrDefault(a => a.Id == applicationId);
+
+            IsEditing = false;
         }
 
         public async Task CancelChanges()

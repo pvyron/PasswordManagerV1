@@ -136,37 +136,46 @@
             </Button.Background>
         </Button>
         
+        <!--Message-->
+        <TextBlock x:Name="MessageToUser"
+                   Visibility="{Binding IsMessageToUserVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"
+                   Grid.Column="3" Grid.Row="5" Margin="15, 15, 15, 15"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center" FontWeight="Bold" Foreground="Red"
+                MaxWidth="230"
+                TextWrapping="Wrap"/>
+
         <!--Edit Button-->
         <Button x:Name="EditPassword"
-                Grid.Column="3" Grid.Row="5" Margin="10, 10, 10, 10" Padding="10, 0, 10, 0"
+                Grid.Column="3" Grid.Row="6" Margin="10, 10, 10, 10" Padding="10, 0, 10, 0"
             HorizontalAlignment="Left" VerticalAlignment="Center">
             <TextBlock Text="Edit Password"/>
         </Button>
 
         <!--Add New Password Button-->
         <Button x:Name="AddNewPassword"
-                Grid.Column="3" Grid.Row="5" Margin="10, 10, 10, 10" Padding="10, 0, 10, 0"
+                Grid.Column="3" Grid.Row="6" Margin="10, 10, 10, 10" Padding="10, 0, 10, 0"
             HorizontalAlignment="Right" VerticalAlignment="Center">
             <TextBlock Text="Add New Password"/>
         </Button>
 
         <!--Cancel Changes Button-->
         <Button x:Name="CancelChanges"
-                Grid.Column="3" Grid.Row="6" Margin="10, 10, 10, 10" Padding="10, 0, 10, 0"
+                Grid.Column="3" Grid.Row="7" Margin="10, 10, 10, 10" Padding="10, 0, 10, 0"
             HorizontalAlignment="Left" VerticalAlignment="Center">
             <TextBlock Text="Cancel Changes"/>
         </Button>
         
         <!--Save Changes Button-->
         <Button x:Name="SaveChanges"
-                Grid.Column="3" Grid.Row="6" Margin="10, 10, 10, 10" Padding="10, 0, 10, 0"
+                Grid.Column="3" Grid.Row="7" Margin="10, 10, 10, 10" Padding="10, 0, 10, 0"
             HorizontalAlignment="Right" VerticalAlignment="Center">
             <TextBlock Text="Save Changes"/>
         </Button>
 
         <!--Delete Password Button-->
         <Button x:Name="DeletePassword"
-                Grid.Column="3" Grid.Row="7" Margin="10, 30, 10, 10" Padding="10, 0, 10, 0"
+                Grid.Column="3" Grid.Row="8" Margin="10, 30, 10, 10" Padding="10, 0, 10, 0"
             HorizontalAlignment="Right" VerticalAlignment="Center">
             <TextBlock Text="Delete Password"/>
         </Button>
