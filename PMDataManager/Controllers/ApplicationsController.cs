@@ -29,14 +29,19 @@ namespace PMDataManager.Controllers
             return data.GetApplicationsByUserId(userId).Find(a => a.Id == id);
         }
 
-        public void Post([FromBody] ApplicationModel passwordModel)
+        //public void Post([FromBody] ApplicationCreateModel applicationCreateModel)
+        //{
+
+        //}
+
+        //public void Put(int id, [FromBody] ApplicationUpdateModel applicationUpdateModel)
+        //{
+
+        //}
+
+        public void Delete(int id)
         {
-
-        }
-
-        public void Put(int id, [FromBody] ApplicationModel passwordModel)
-        {
-
+            
         }
     }
 }

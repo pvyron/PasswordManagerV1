@@ -135,15 +135,6 @@
                 <ImageBrush ImageSource="clipboard.png" Stretch="UniformToFill" />
             </Button.Background>
         </Button>
-        
-        <!--Message-->
-        <TextBlock x:Name="MessageToUser"
-                   Visibility="{Binding IsMessageToUserVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"
-                   Grid.Column="3" Grid.Row="5" Margin="15, 15, 15, 15"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center" FontWeight="Bold" Foreground="Red"
-                MaxWidth="230"
-                TextWrapping="Wrap"/>
 
         <!--Edit Button-->
         <Button x:Name="EditPassword"

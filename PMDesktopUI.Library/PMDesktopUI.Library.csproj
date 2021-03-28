@@ -72,7 +72,9 @@
     <Compile Include="API\ApplicationsEndPoint.cs" />
     <Compile Include="API\IApplicationsEndPoint.cs" />
     <Compile Include="API\IPasswordsEndPoint.cs" />
+    <Compile Include="API\IUsersEndpoint.cs" />
     <Compile Include="API\PasswordsEndPoint.cs" />
+    <Compile Include="API\UsersEndpoint.cs" />
     <Compile Include="Helpers\ConfigHelper.cs" />
     <Compile Include="Helpers\IConfigHelper.cs" />
     <Compile Include="Models\ApplicationModel.cs" />
@@ -82,6 +84,7 @@
     <Compile Include="Models\PasswordCreateModel.cs" />
     <Compile Include="Models\PasswordModel.cs" />
     <Compile Include="Models\PasswordUpdateModel.cs" />
+    <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

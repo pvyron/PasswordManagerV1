@@ -32,7 +32,8 @@ namespace PMDesktopUI
         {
             _container.Instance(_container)
                 .PerRequest<IApplicationsEndPoint, ApplicationsEndPoint>()
-                .PerRequest<IPasswordsEndPoint, PasswordsEndPoint>();
+                .PerRequest<IPasswordsEndPoint, PasswordsEndPoint>()
+                .PerRequest<IUsersEndpoint, UsersEndpoint>();
 
             _container
                 .Singleton<IAPIHelper, APIHelper>()

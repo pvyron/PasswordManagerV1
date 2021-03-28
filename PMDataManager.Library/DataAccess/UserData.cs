@@ -18,6 +18,14 @@ namespace PMDataManager.Library.DataAccess
 
             var output = sql.LoadData<UserModel, dynamic>("dbo.spUserLookup", p, "PMDatabase").FirstOrDefault();
 
+            if (output is null)
+            {
+                return new UserModel()
+                {
+                    Id = Id
+                };
+            }
+
             return output;
         }
     }

@@ -39,6 +39,16 @@ namespace PMDesktopUI.ViewModels
             NotifyOfPropertyChange(() => IsLoggedIn);
         }
 
+        public async Task Index()
+        {
+            ActivateItem(_indexViewModel);
+        }
+
+        public async Task UserManagement()
+        {
+            ActivateItem(IoC.Get<UserAdministrationViewModel>());
+        }
+
         public async Task ExitApplication()
         {
             TryClose();

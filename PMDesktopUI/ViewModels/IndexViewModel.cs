@@ -5,6 +5,7 @@ using PMDesktopUI.Library.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -26,24 +27,41 @@ namespace PMDesktopUI.ViewModels
         private string _password;
         private bool _isEditing;
         private bool _isAdding;
-        private bool _isMessageToUserVisible;
-        private string _messageToUser;
 
         private IApplicationsEndPoint _applicationsEndPoint;
         private IPasswordsEndPoint _passwordsEndPoint;
+        private readonly StatusInfoViewModel _statusInfoViewModel;
+        private readonly IWindowManager _windowManager;
 
-        public IndexViewModel(IApplicationsEndPoint applicationsEndPoint, IPasswordsEndPoint passwordsEndPoint)
+        public IndexViewModel(IApplicationsEndPoint applicationsEndPoint, IPasswordsEndPoint passwordsEndPoint, StatusInfoViewModel statusInfoViewModel, IWindowManager windowManager)
         {
             _applicationsEndPoint = applicationsEndPoint;
             _passwordsEndPoint = passwordsEndPoint;
+            _statusInfoViewModel = statusInfoViewModel;
+            _windowManager = windowManager;
         }
 
         protected override async void OnViewLoaded(object view)
         {
             base.OnViewLoaded(view);
 
-            await LoadApplications();
-            await LoadPasswords();
+            try
+            {
+                await LoadApplications();
+                await LoadPasswords();
+            }
+            catch (Exception ex)
+            {
+                dynamic settings = new ExpandoObject();
+                settings.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                settings.ResizeMode = ResizeMode.NoResize;
+                settings.Title = "System Error";
+
+                _statusInfoViewModel.UpdateMessage("Error", ex.Message);
+                _windowManager.ShowDialog(_statusInfoViewModel, settings: settings);
+
+                TryClose();
+            }
         }
 
         private async Task LoadApplications()
@@ -181,26 +199,6 @@ namespace PMDesktopUI.ViewModels
             { 
                 _password = value;
                 NotifyOfPropertyChange(() => Password);
-            }
-        }
-
-        public string MessageToUser
-        {
-            get { return _messageToUser; }
-            set
-            {
-                _messageToUser = value;
-                NotifyOfPropertyChange(() => MessageToUser);
-            }
-        }
-
-        public bool IsMessageToUserVisible
-        {
-            get { return _isMessageToUserVisible; }
-            set
-            {
-                _isMessageToUserVisible = value;
-                NotifyOfPropertyChange(() => IsMessageToUserVisible);
             }
         }
 
