@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using PMDataManager.Library.DataAccess;
 using PMDataManager.Library.Models;
 using System;
@@ -16,42 +17,54 @@ namespace PMDataManager.Controllers
     [Authorize(Roles = "Verified")]
     public class PasswordsController : ControllerBase
     {
+        private readonly IConfiguration _config;
+
+        public PasswordsController(IConfiguration config)
+        {
+            _config = config;
+        }
+
+        [HttpGet]
         public List<PasswordModel> Get()
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            PasswordData data = new PasswordData();
+            PasswordData data = new PasswordData(_config);
 
             return data.GetPasswordsByUserId(userId);
         }
 
-        public PasswordModel Get(int id)
-        {
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            PasswordData data = new PasswordData();
+        //[HttpGet]
+        //public PasswordModel Get(int id)
+        //{
+        //    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //    PasswordData data = new PasswordData(_config);
 
-            return data.GetPasswordsByUserId(userId).Find(p => p.Id == id);
-        }
+        //    return data.GetPasswordsByUserId(userId).Find(p => p.Id == id);
+        //}
 
+        [HttpPost]
         public int Post([FromBody] PasswordCreateModel passwordCreateModel)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            PasswordData data = new PasswordData();
+            PasswordData data = new PasswordData(_config);
 
             return data.CreatePassword(userId, passwordCreateModel);
         }
 
+        [HttpPut]
         public void Put(int id, [FromBody] PasswordUpdateModel passwordUpdateModel)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            PasswordData data = new PasswordData();
+            PasswordData data = new PasswordData(_config);
 
             data.UpdatePasswordForUser(id, userId, passwordUpdateModel);
         }
 
+        [HttpDelete]
         public void Delete(int id)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            PasswordData data = new PasswordData();
+            PasswordData data = new PasswordData(_config);
 
             data.DeletePasswordForUser(id, userId);
         }

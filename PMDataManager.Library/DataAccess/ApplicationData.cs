@@ -1,4 +1,5 @@
-﻿using PMDataManager.Library.Internal.DataAccess;
+﻿using Microsoft.Extensions.Configuration;
+using PMDataManager.Library.Internal.DataAccess;
 using PMDataManager.Library.Models;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,16 @@ namespace PMDataManager.Library.DataAccess
 {
     public class ApplicationData
     {
+        private readonly IConfiguration _config;
+
+        public ApplicationData(IConfiguration config)
+        {
+            _config = config;
+        }
+
         public List<ApplicationModel> GetApplicationsByUserId(string Id)
         {
-            SqlDataAccess sql = new SqlDataAccess();
+            SqlDataAccess sql = new SqlDataAccess(_config);
 
             var p = new { userId = Id };
 
@@ -23,7 +31,7 @@ namespace PMDataManager.Library.DataAccess
 
         public string GetApplicationOwner(int id)
         {
-            SqlDataAccess sql = new SqlDataAccess();
+            SqlDataAccess sql = new SqlDataAccess(_config);
 
             var p = new { Id = id };
 

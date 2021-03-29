@@ -1,4 +1,5 @@
-﻿using PMDataManager.Library.Internal.DataAccess;
+﻿using Microsoft.Extensions.Configuration;
+using PMDataManager.Library.Internal.DataAccess;
 using PMDataManager.Library.Models;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,15 @@ namespace PMDataManager.Library.DataAccess
 {
     public class PasswordData
     {
+        private readonly IConfiguration _config;
+
+        public PasswordData(IConfiguration config)
+        {
+            _config = config;
+        }
         public List<PasswordModel> GetPasswordsByUserId(string id)
         {
-            SqlDataAccess sql = new SqlDataAccess();
+            SqlDataAccess sql = new SqlDataAccess(_config);
 
             var p = new { userId = id };
 
@@ -30,7 +37,7 @@ namespace PMDataManager.Library.DataAccess
                 throw new Exception("Password was not found or user is unauthorized.");
             }
 
-            SqlDataAccess sql = new SqlDataAccess();
+            SqlDataAccess sql = new SqlDataAccess(_config);
 
             var p = new
             {
@@ -48,7 +55,7 @@ namespace PMDataManager.Library.DataAccess
 
         public int CreatePassword(string userId, PasswordCreateModel passwordCreateModel)
         {
-            ApplicationData applicationData = new ApplicationData();
+            ApplicationData applicationData = new ApplicationData(_config);
 
             string applicationOwner = applicationData.GetApplicationOwner(passwordCreateModel.ApplicationId);
 
@@ -57,7 +64,7 @@ namespace PMDataManager.Library.DataAccess
                 throw new Exception("Application was not found or user is unauthorized.");
             }
 
-            SqlDataAccess sql = new SqlDataAccess();
+            SqlDataAccess sql = new SqlDataAccess(_config);
 
             var p = new
             {
@@ -83,7 +90,7 @@ namespace PMDataManager.Library.DataAccess
                 throw new Exception("Password was not found or user is unauthorized.");
             }
 
-            SqlDataAccess sql = new SqlDataAccess();
+            SqlDataAccess sql = new SqlDataAccess(_config);
 
             var p = new { Id = id };
 
@@ -92,7 +99,7 @@ namespace PMDataManager.Library.DataAccess
 
         public string GetPasswordOwner(int id)
         {
-            SqlDataAccess sql = new SqlDataAccess();
+            SqlDataAccess sql = new SqlDataAccess(_config);
 
             var p = new { Id = id };
 

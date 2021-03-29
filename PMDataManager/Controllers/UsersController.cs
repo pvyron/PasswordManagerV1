@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using PMDataManager.Data;
 using PMDataManager.Library.DataAccess;
 using PMDataManager.Library.Models;
@@ -20,11 +21,13 @@ namespace PMDataManager.Controllers
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
+        private readonly IConfiguration _config;
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public UsersController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public UsersController(ApplicationDbContext context, UserManager<IdentityUser> userManager, IConfiguration config)
         {
+            _config = config;
             _context = context;
             _userManager = userManager;
         }
@@ -33,7 +36,7 @@ namespace PMDataManager.Controllers
         public UserModel GetById()
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            UserData data = new UserData();
+            UserData data = new UserData(_config);
 
             return data.GetUserById(userId);
         }
