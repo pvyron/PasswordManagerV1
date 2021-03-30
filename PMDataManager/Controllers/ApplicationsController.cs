@@ -24,6 +24,7 @@ namespace PMDataManager.Controllers
             _config = config;
         }
 
+        [HttpGet]
         public List<ApplicationModel> Get()
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -32,6 +33,8 @@ namespace PMDataManager.Controllers
             return data.GetApplicationsByUserId(userId);
         }
 
+        [HttpGet]
+        [Route("{id}")]
         public ApplicationModel Get(int id)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -50,6 +53,8 @@ namespace PMDataManager.Controllers
 
         //}
 
+        [HttpDelete]
+        [Route("{id}")]
         public void Delete(int id)
         {
 

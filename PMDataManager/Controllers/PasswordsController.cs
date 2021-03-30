@@ -33,14 +33,15 @@ namespace PMDataManager.Controllers
             return data.GetPasswordsByUserId(userId);
         }
 
-        //[HttpGet]
-        //public PasswordModel Get(int id)
-        //{
-        //    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //    PasswordData data = new PasswordData(_config);
+        [HttpGet]
+        [Route("{id}")]
+        public PasswordModel Get(int id)
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            PasswordData data = new PasswordData(_config);
 
-        //    return data.GetPasswordsByUserId(userId).Find(p => p.Id == id);
-        //}
+            return data.GetPasswordsByUserId(userId).Find(p => p.Id == id);
+        }
 
         [HttpPost]
         public int Post([FromBody] PasswordCreateModel passwordCreateModel)
@@ -52,6 +53,7 @@ namespace PMDataManager.Controllers
         }
 
         [HttpPut]
+        [Route("{id}")]
         public void Put(int id, [FromBody] PasswordUpdateModel passwordUpdateModel)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -61,6 +63,7 @@ namespace PMDataManager.Controllers
         }
 
         [HttpDelete]
+        [Route("{id}")]
         public void Delete(int id)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

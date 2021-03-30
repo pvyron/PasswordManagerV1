@@ -10,10 +10,6 @@ namespace PMDesktopUI.Library.Models
     {
         public string Access_Token { get; set; }
 
-        public string Token_Type { get; set; }
-
-        public int Expires_In { get; set; }
-
         public string UserName { get; set; }
     }
 }
