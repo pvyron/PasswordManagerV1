@@ -23,7 +23,7 @@ namespace PMDesktopUI.ViewModels
 
         public void Close()
         {
-            TryClose();
+            TryCloseAsync();
         }
     }
 }

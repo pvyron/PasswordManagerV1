@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using PMDesktopUI.EventModels;
@@ -21,37 +22,38 @@ namespace PMDesktopUI.ViewModels
             _indexViewModel = indexViewModel;
             _user = user;
 
-            _events.Subscribe(this);
-            ActivateItem(IoC.Get<LoginViewModel>());
+            _events.SubscribeOnPublishedThread(this);
+
+            ActivateItemAsync(IoC.Get<LoginViewModel>());
         }
 
-        public void Handle(LogOnEventModel message)
+        public async Task HandleAsync(LogOnEventModel message, CancellationToken cancellationToken)
         {
             _indexViewModel = IoC.Get<IndexViewModel>();
-            ActivateItem(_indexViewModel);
+            await ActivateItemAsync(_indexViewModel, cancellationToken);
             NotifyOfPropertyChange(() => IsLoggedIn);
         }
         
         public async Task LoginScreen()
         {
             _user.LogOffUser();
-            ActivateItem(IoC.Get<LoginViewModel>());
+            await ActivateItemAsync(IoC.Get<LoginViewModel>());
             NotifyOfPropertyChange(() => IsLoggedIn);
         }
 
         public async Task Index()
         {
-            ActivateItem(_indexViewModel);
+            await ActivateItemAsync(_indexViewModel);
         }
 
         public async Task UserManagement()
         {
-            ActivateItem(IoC.Get<UserAdministrationViewModel>());
+            await ActivateItemAsync(IoC.Get<UserAdministrationViewModel>());
         }
 
         public async Task ExitApplication()
         {
-            TryClose();
+            await TryCloseAsync();
         }
 
         public bool IsLoggedIn

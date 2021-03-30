@@ -102,7 +102,7 @@ namespace PMDesktopUI.ViewModels
 
                 await apiHelper.GetLoggedInUserInfo(result.Access_Token);
 
-                events.PublishOnUIThread(new LogOnEventModel());
+                await events.PublishOnUIThreadAsync(new LogOnEventModel());
             }
             catch (Exception ex)
             {

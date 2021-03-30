@@ -82,7 +82,7 @@
             HorizontalAlignment="Center" VerticalAlignment="Center"
                 MinHeight="25" MinWidth="25" BorderBrush="{x:Null}" Foreground="{x:Null}" >
             <Button.Background>
-                <ImageBrush ImageSource="add.png" Stretch="UniformToFill" />
+                <ImageBrush ImageSource="/Views/add.png" Stretch="UniformToFill" />
             </Button.Background>
         </Button>
 
@@ -112,7 +112,7 @@
             HorizontalAlignment="Center" VerticalAlignment="Center"
                 MinHeight="25" MinWidth="25" BorderBrush="{x:Null}" Foreground="{x:Null}" >
             <Button.Background>
-                <ImageBrush ImageSource="clipboard.png" Stretch="UniformToFill" />
+                <ImageBrush ImageSource="/Views/clipboard.png" Stretch="UniformToFill" />
             </Button.Background>
         </Button>
 
@@ -132,7 +132,7 @@
             HorizontalAlignment="Center" VerticalAlignment="Center"
                 MinHeight="25" MinWidth="25" BorderBrush="{x:Null}" Foreground="{x:Null}" >
             <Button.Background>
-                <ImageBrush ImageSource="clipboard.png" Stretch="UniformToFill" />
+                <ImageBrush ImageSource="/Views/clipboard.png" Stretch="UniformToFill" />
             </Button.Background>
         </Button>
 

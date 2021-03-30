@@ -58,9 +58,9 @@ namespace PMDesktopUI.ViewModels
                 settings.Title = "System Error";
 
                 _statusInfoViewModel.UpdateMessage("Error", ex.Message);
-                _windowManager.ShowDialog(_statusInfoViewModel, settings: settings);
+                await _windowManager.ShowDialogAsync(_statusInfoViewModel, settings: settings);
 
-                TryClose();
+                await TryCloseAsync();
             }
         }
 
