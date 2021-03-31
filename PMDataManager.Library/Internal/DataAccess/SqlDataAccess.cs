@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace PMDataManager.Library.Internal.DataAccess
 {
-    internal class SqlDataAccess
+    public class SqlDataAccess : IDisposable, ISqlDataAccess
     {
         private readonly IConfiguration _config;
 
@@ -55,6 +55,11 @@ namespace PMDataManager.Library.Internal.DataAccess
             {
                 return conn.ExecuteScalar<T>(storedProcedure, parameters, commandType: CommandType.StoredProcedure);
             }
+        }
+
+        public void Dispose()
+        {
+            
         }
     }
 }

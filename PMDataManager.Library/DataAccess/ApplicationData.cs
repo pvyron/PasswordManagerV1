@@ -9,33 +9,31 @@ using System.Threading.Tasks;
 
 namespace PMDataManager.Library.DataAccess
 {
-    public class ApplicationData
+    public class ApplicationData : IApplicationData
     {
-        private readonly IConfiguration _config;
+        private readonly ISqlDataAccess _sql;
 
-        public ApplicationData(IConfiguration config)
+        public ApplicationData(ISqlDataAccess sql)
         {
-            _config = config;
+            _sql = sql;
         }
 
         public List<ApplicationModel> GetApplicationsByUserId(string Id)
         {
-            SqlDataAccess sql = new SqlDataAccess(_config);
 
             var p = new { userId = Id };
 
-            var output = sql.LoadData<ApplicationModel, dynamic>("dbo.spApplicationLookup_ForUser", p, "PMDatabase");
+            var output = _sql.LoadData<ApplicationModel, dynamic>("dbo.spApplicationLookup_ForUser", p, "PMDatabase");
 
             return output;
         }
 
         public string GetApplicationOwner(int id)
         {
-            SqlDataAccess sql = new SqlDataAccess(_config);
 
             var p = new { Id = id };
 
-            var output = sql.LoadData<string, dynamic>("dbo.spApplicationOwnerLookup_ById", p, "PMDatabase").FirstOrDefault();
+            var output = _sql.LoadData<string, dynamic>("dbo.spApplicationOwnerLookup_ById", p, "PMDatabase").FirstOrDefault();
 
             return output;
         }

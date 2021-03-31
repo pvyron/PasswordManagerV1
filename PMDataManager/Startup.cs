@@ -16,6 +16,8 @@ using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
+using PMDataManager.Library.DataAccess;
+using PMDataManager.Library.Internal.DataAccess;
 
 namespace PMDataManager
 {
@@ -39,6 +41,13 @@ namespace PMDataManager
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            // Personal Services
+            services.AddTransient<IUserData, UserData>();
+            services.AddTransient<IPasswordData, PasswordData>();
+            services.AddTransient<IApplicationData, ApplicationData>();
+            services.AddTransient<ISqlDataAccess, SqlDataAccess>();
+
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = "JwtBearer";

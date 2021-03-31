@@ -18,19 +18,20 @@ namespace PMDataManager.Controllers
     public class ApplicationsController : ControllerBase
     {
         private readonly IConfiguration _config;
+        private readonly IApplicationData _applicationData;
 
-        public ApplicationsController(IConfiguration config)
+        public ApplicationsController(IConfiguration config, IApplicationData applicationData)
         {
             _config = config;
+            _applicationData = applicationData;
         }
 
         [HttpGet]
         public List<ApplicationModel> Get()
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            ApplicationData data = new ApplicationData(_config);
 
-            return data.GetApplicationsByUserId(userId);
+            return _applicationData.GetApplicationsByUserId(userId);
         }
 
         [HttpGet]
@@ -38,9 +39,8 @@ namespace PMDataManager.Controllers
         public ApplicationModel Get(int id)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            ApplicationData data = new ApplicationData(_config);
 
-            return data.GetApplicationsByUserId(userId).Find(a => a.Id == id);
+            return _applicationData.GetApplicationsByUserId(userId).Find(a => a.Id == id);
         }
 
         //public void Post([FromBody] ApplicationCreateModel applicationCreateModel)

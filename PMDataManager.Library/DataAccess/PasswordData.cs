@@ -9,21 +9,21 @@ using System.Threading.Tasks;
 
 namespace PMDataManager.Library.DataAccess
 {
-    public class PasswordData
+    public class PasswordData : IPasswordData
     {
-        private readonly IConfiguration _config;
+        private readonly ISqlDataAccess _sql;
+        private readonly IApplicationData _applicationData;
 
-        public PasswordData(IConfiguration config)
+        public PasswordData(ISqlDataAccess sql, IApplicationData applicationData)
         {
-            _config = config;
+            _sql = sql;
+            _applicationData = applicationData;
         }
         public List<PasswordModel> GetPasswordsByUserId(string id)
         {
-            SqlDataAccess sql = new SqlDataAccess(_config);
-
             var p = new { userId = id };
 
-            var output = sql.LoadData<PasswordModel, dynamic>("dbo.spPasswordLookup_ForUser", p, "PMDatabase");
+            var output = _sql.LoadData<PasswordModel, dynamic>("dbo.spPasswordLookup_ForUser", p, "PMDatabase");
 
             return output;
         }
@@ -37,8 +37,6 @@ namespace PMDataManager.Library.DataAccess
                 throw new Exception("Password was not found or user is unauthorized.");
             }
 
-            SqlDataAccess sql = new SqlDataAccess(_config);
-
             var p = new
             {
                 Id = id,
@@ -50,21 +48,17 @@ namespace PMDataManager.Library.DataAccess
                 Encrypted = passwordUpdateModel.Encrypted
             };
 
-            sql.UpdateData("dbo.spPasswordUpdate_ByUserById", p, "PMDatabase");
+            _sql.UpdateData("dbo.spPasswordUpdate_ByUserById", p, "PMDatabase");
         }
 
         public int CreatePassword(string userId, PasswordCreateModel passwordCreateModel)
         {
-            ApplicationData applicationData = new ApplicationData(_config);
-
-            string applicationOwner = applicationData.GetApplicationOwner(passwordCreateModel.ApplicationId);
+            string applicationOwner = _applicationData.GetApplicationOwner(passwordCreateModel.ApplicationId);
 
             if (applicationOwner != userId)
             {
                 throw new Exception("Application was not found or user is unauthorized.");
             }
-
-            SqlDataAccess sql = new SqlDataAccess(_config);
 
             var p = new
             {
@@ -76,7 +70,7 @@ namespace PMDataManager.Library.DataAccess
                 Encrypted = passwordCreateModel.Encrypted
             };
 
-            var output = sql.SaveData<int, dynamic>("dbo.spPasswordAdd", p, "PMDatabase");
+            var output = _sql.SaveData<int, dynamic>("dbo.spPasswordAdd", p, "PMDatabase");
 
             return output;
         }
@@ -90,20 +84,17 @@ namespace PMDataManager.Library.DataAccess
                 throw new Exception("Password was not found or user is unauthorized.");
             }
 
-            SqlDataAccess sql = new SqlDataAccess(_config);
-
             var p = new { Id = id };
 
-            sql.UpdateData("dbo.spPasswordDelete_ById", p, "PMDatabase");
+            _sql.UpdateData("dbo.spPasswordDelete_ById", p, "PMDatabase");
         }
 
         public string GetPasswordOwner(int id)
         {
-            SqlDataAccess sql = new SqlDataAccess(_config);
 
             var p = new { Id = id };
 
-            var output = sql.LoadData<string, dynamic>("dbo.spPasswordOwnerLookup_ById", p, "PMDatabase").FirstOrDefault();
+            var output = _sql.LoadData<string, dynamic>("dbo.spPasswordOwnerLookup_ById", p, "PMDatabase").FirstOrDefault();
 
             return output;
         }

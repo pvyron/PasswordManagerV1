@@ -17,20 +17,19 @@ namespace PMDataManager.Controllers
     [Authorize(Roles = "Verified")]
     public class PasswordsController : ControllerBase
     {
-        private readonly IConfiguration _config;
+        private readonly IPasswordData _passwordData;
 
-        public PasswordsController(IConfiguration config)
+        public PasswordsController(IPasswordData passwordData)
         {
-            _config = config;
+            _passwordData = passwordData;
         }
 
         [HttpGet]
         public List<PasswordModel> Get()
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            PasswordData data = new PasswordData(_config);
 
-            return data.GetPasswordsByUserId(userId);
+            return _passwordData.GetPasswordsByUserId(userId);
         }
 
         [HttpGet]
@@ -38,18 +37,16 @@ namespace PMDataManager.Controllers
         public PasswordModel Get(int id)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            PasswordData data = new PasswordData(_config);
 
-            return data.GetPasswordsByUserId(userId).Find(p => p.Id == id);
+            return _passwordData.GetPasswordsByUserId(userId).Find(p => p.Id == id);
         }
 
         [HttpPost]
         public int Post([FromBody] PasswordCreateModel passwordCreateModel)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            PasswordData data = new PasswordData(_config);
 
-            return data.CreatePassword(userId, passwordCreateModel);
+            return _passwordData.CreatePassword(userId, passwordCreateModel);
         }
 
         [HttpPut]
@@ -57,9 +54,8 @@ namespace PMDataManager.Controllers
         public void Put(int id, [FromBody] PasswordUpdateModel passwordUpdateModel)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            PasswordData data = new PasswordData(_config);
 
-            data.UpdatePasswordForUser(id, userId, passwordUpdateModel);
+            _passwordData.UpdatePasswordForUser(id, userId, passwordUpdateModel);
         }
 
         [HttpDelete]
@@ -67,9 +63,8 @@ namespace PMDataManager.Controllers
         public void Delete(int id)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            PasswordData data = new PasswordData(_config);
 
-            data.DeletePasswordForUser(id, userId);
+            _passwordData.DeletePasswordForUser(id, userId);
         }
     }
 }

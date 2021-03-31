@@ -21,24 +21,23 @@ namespace PMDataManager.Controllers
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
-        private readonly IConfiguration _config;
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IUserData _userData;
 
-        public UsersController(ApplicationDbContext context, UserManager<IdentityUser> userManager, IConfiguration config)
+        public UsersController(ApplicationDbContext context, UserManager<IdentityUser> userManager, IUserData userData)
         {
-            _config = config;
             _context = context;
             _userManager = userManager;
+            _userData = userData;
         }
 
         [HttpGet]
         public UserModel GetById()
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            UserData data = new UserData(_config);
 
-            return data.GetUserById(userId);
+            return _userData.GetUserById(userId);
         }
 
         [HttpPost]
