@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -14,10 +15,12 @@ namespace PMDataManager.Library.Internal.DataAccess
     public class SqlDataAccess : IDisposable, ISqlDataAccess
     {
         private readonly IConfiguration _config;
+        private readonly ILogger<SqlDataAccess> _logger;
 
-        public SqlDataAccess(IConfiguration config)
+        public SqlDataAccess(IConfiguration config, ILogger<SqlDataAccess> logger)
         {
             _config = config;
+            _logger = logger;
         }
 
         public string GetConnectionString(string name)
